@@ -25,11 +25,20 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
           fetch-depth: 0
 
+      - name: Get changed YAML files
+        id: changed-files
+        uses: tj-actions/changed-files@v44
+        with:
+          files: |
+            yaml/**/*.yaml
+            yaml/**/*.yml
+
       - name: Generate API Documentation
+        if: steps.changed-files.outputs.any_changed == 'true'
         uses: DomoApps/documentation-generator-action@main
         with:
           openai_api_key: ${{ secrets.OPENAI_API_KEY }}
-          yaml_input_path: "./yaml"
+          yaml_input_path: ${{ steps.changed-files.outputs.all_changed_files }}
           output_path: "./docs"
           template_path: "default" # Uses action's built-in template
           openai_model: "gpt-4o"
