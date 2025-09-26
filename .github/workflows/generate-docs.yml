@@ -36,6 +36,6 @@ jobs:
           max_iterations: "5"
           completeness_threshold: "90"
           timeout_minutes: "10"
-          process_changed_only: "false" # Only process changed YAML files
+          process_changed_only: "true" # Only process changed YAML files
           create_pull_request: "true" # Automatically create PR with results
           pr_title: "📚 Auto-generated Documentation Update"
