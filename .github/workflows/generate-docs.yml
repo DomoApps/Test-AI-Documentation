@@ -37,22 +37,11 @@ jobs:
           completeness_threshold: "90"
           timeout_minutes: "10"
 
-      - name: Commit Generated Documentation
-        run: |
-          git config --local user.email "action@github.com"
-          git config --local user.name "Documentation Bot"
-          git add docs/
-          if git diff --staged --quiet; then
-            echo "No changes to commit"
-          else
-            git commit -m "📚 Update API documentation from YAML changes"
-            git push
-          fi
       - name: Create Pull Request with Documentation
         uses: peter-evans/create-pull-request@v5
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          commit-message: "📚 Update API documentation"
+          commit-message: "📚 Update API documentation from YAML changes"
           title: "📚 Auto-generated Documentation Update"
           body: |
             ## 🤖 Documentation Update
@@ -60,7 +49,7 @@ jobs:
             This PR contains automatically generated documentation from YAML file changes.
 
             Please review before merging.
-          branch: docs/auto-update
+          branch: docs/api-update-${{ github.run_number }}
           delete-branch: true
           add-paths: |
             docs/**
