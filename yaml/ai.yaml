@@ -1,6 +1,6 @@
 openapi: 3.1.0
 info:
-  title: AI API
+  title: Domo AI API
   description: Jupyter and AI Projects
   version: 0.0.0
 servers:

@@ -25,40 +25,17 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
           fetch-depth: 0
 
-      - name: Get changed YAML files
-        id: changed-files
-        uses: tj-actions/changed-files@v44
-        with:
-          files: |
-            yaml/**/*.yaml
-            yaml/**/*.yml
-
       - name: Generate API Documentation
-        if: steps.changed-files.outputs.any_changed == 'true'
         uses: DomoApps/documentation-generator-action@main
         with:
           openai_api_key: ${{ secrets.OPENAI_API_KEY }}
-          yaml_input_path: ${{ steps.changed-files.outputs.all_changed_files }}
+          yaml_input_path: "./yaml"
           output_path: "./docs"
-          template_path: "default" # Uses action's built-in template
+          template_path: "default" # Uses built-in template, or specify custom path
           openai_model: "gpt-4o"
           max_iterations: "5"
           completeness_threshold: "90"
           timeout_minutes: "10"
-
-      - name: Create Pull Request with Documentation
-        uses: peter-evans/create-pull-request@v5
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          commit-message: "📚 Update API documentation from YAML changes"
-          title: "📚 Auto-generated Documentation Update"
-          body: |
-            ## 🤖 Documentation Update
-
-            This PR contains automatically generated documentation from YAML file changes.
-
-            Please review before merging.
-          branch: docs/api-update-${{ github.run_number }}
-          delete-branch: true
-          add-paths: |
-            docs/**
+          process_changed_only: "true" # Only process changed YAML files
+          create_pull_request: "true" # Automatically create PR with results
+          pr_title: "📚 Auto-generated Documentation Update"
